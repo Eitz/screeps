@@ -1,19 +1,11 @@
-module.exports.getStructures = function (pos) {
-	let allStructures = [];
-	let rooms = [];
-	for (let creepName in Game.creeps) {
-		if (rooms.indexOf(Game.creeps[creepName].room.name) == -1)
-			rooms.push(Game.creeps[creepName].room.name);
-	}
-	for (let roomName of rooms) {
-		let structures = Game.rooms[roomName].find(FIND_STRUCTURES) || [];
-		for (let struct of structures)
-			allStructures.push(struct);
-	}
+
+
+module.exports.getStructures = function (roomName, pos) {
+	let structures = Game.rooms[roomName].find(FIND_STRUCTURES);
 	if (pos)
-			return _.sortBy(allStructures, s => pos.getRangeTo(s));
-		else
-			return allStructures;
+		return _.sortBy(structures, s => pos.getRangeTo(s));
+	else
+		return structures;
 }
 
 module.exports.creepsQuantity = function () {

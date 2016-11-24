@@ -6,13 +6,12 @@ bodyParts[WORK] = 100;
 
 const spawns = {
 	'Home': [
-		{ name: 'default', getSource: () => '57ef9d9486f108ae6e60df66', limit: 1 },
-		{ name: 'default', getSource: () => '57ef9d9486f108ae6e60df65', limit: 1 },
-		{ name: 'upgrade', getSource: () => '57ef9d9486f108ae6e60df66', limit: 4 },
-		{ name: 'upgrade', getSource: () => '57ef9d9486f108ae6e60df65', limit: 4 },
-		{ name: 'default', getSource: () => '57ef9d9586f108ae6e60df69', limit: 4, flag: 'Safe Room' },
-		{ name: 'default', getSource: () => '57ef9d9786f108ae6e60dfa9', limit: 4, flag: 'Side Room' },
-		{ name: 'default', getSource: () => '57ef9d9786f108ae6e60dfaa', limit: 4, flag: 'Side Room' },
+		{ name: 'default', getSource: () => '57ef9d9486f108ae6e60df66', limit: 2 },
+		{ name: 'default', getSource: () => '57ef9d9486f108ae6e60df65', limit: 2 },
+		{ name: 'upgrade', getSource: () => '57ef9d9486f108ae6e60df66', limit: 2 },
+		{ name: 'upgrade', getSource: () => '57ef9d9486f108ae6e60df65', limit: 2 },
+		/*{ name: 'default', getSource: () => '57ef9dd486f108ae6e60e5c1', limit: 4, flag:'BellowRoom' },
+		{ name: 'default', getSource: () => '57ef9dd486f108ae6e60e5c2', limit: 4, flag:'BellowRoom' },*/
 	],
 	'default': [
 		{
@@ -52,11 +51,11 @@ function tryToSpawnCreep() {
 }
 
 function spawnCreep(spawnName, classe) {
-
+	
 	let spawn = Game.spawns[spawnName];
 	let energyCapacity = spawn.energyCapacity;
 	let energyTotal = spawn.energy;
-	for (let ext of spawn.room.find(FIND_MY_STRUCTURES, { filter: (strct) => strct.structureType === STRUCTURE_EXTENSION })) {
+	for (let ext of spawn.room.find(FIND_MY_STRUCTURES, {filter:  (strct) => strct.structureType === STRUCTURE_EXTENSION })) {
 		energyCapacity += ext.energyCapacity;
 		energyTotal += ext.energy;
 	}
@@ -65,13 +64,13 @@ function spawnCreep(spawnName, classe) {
 		return spawn.createCreep(body.parts, undefined, { flag: classe.flag, classe: classe.name, job: undefined, working: false, source: classe.getSource(spawnName) });
 	else
 		return undefined;
-
+	
 	function prepareBody(classe, energyCapacity) {
 		let body = { parts: [], cost: 0 };
 		if (!classe || !classe.name) { // default body
 			body = getDefaultBody(energyCapacity);
 		} else {
-			switch (classe.name) {
+			switch(classe.name) {
 				case 'transport':
 					while (body.cost < energyCapacity) {
 						addBodyPart(body, MOVE);
@@ -79,11 +78,11 @@ function spawnCreep(spawnName, classe) {
 					}
 					break;
 				case 'harvest':
-					addBodyPart(body, MOVE);
-					addBodyPart(body, CARRY);
-					while (body.cost < energyCapacity) {
-						addBodyPart(body, WORK);
-					}
+						addBodyPart(body, MOVE);
+						addBodyPart(body, CARRY);
+						while (body.cost < energyCapacity) {
+							addBodyPart(body, WORK);
+						}										
 					break;
 				case 'upgrade':
 				case 'default':

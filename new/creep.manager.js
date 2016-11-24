@@ -9,41 +9,12 @@ const jobs = {
 	"repair" : require('./creep.job.repair'),
 };
 
-module.exports = {
-	run: function () {
-		for (let name in Memory.creeps) {
-			let creep = Game.creeps[name];
-			if (!creep) {
-				delete Memory.creeps[name];
-				break;
-			}
-			if (!creep.memory.job) {
-				assignJob(creep);
-				if (creep.memory.job) {
-					creep.say(creep.memory.job.name);
-				}
-			}
-			if (creep.hits > 0 && creep.memory.job) {
-				let jobComplete = !jobs[creep.memory.job.name].run(creep) 
-				if (jobComplete) {
-					removeJob(creep);
-					assignJob(creep);
-					if (creep.memory.job) {
-						jobs[creep.memory.job.name].run(creep)
-					}
-				}
-				
-			}
-		}
-	}
-};
-
 /** @param {Creep} creep */
 // TODO: check if target is nearer than source and working = true for some cases
 function assignJob(creep) {
 	/** @type {StructureExtension} struct */
 	let struct;
-	let structures = util.getStructures(creep.pos);
+	let structures = util.getStructures(creep.room.name, creep.pos);
 	if (creep.memory.classe != 'upgrade' || util.creepsQuantity() < 5) {
 		for (struct of structures) {
 			if (struct.structureType === STRUCTURE_CONTAINER || struct.structureType === STRUCTURE_SPAWN || struct.structureType === STRUCTURE_EXTENSION) {
@@ -71,12 +42,9 @@ function assignJob(creep) {
 			return;
 		}
 	}
-	/** @type {StructureController} */
-	let controller;
-	console.log(structures.join(','));
-	for (controller of structures) {
-		if (controller.structureType == STRUCTURE_CONTROLLER && controller.my)
-			return creep.memory.job = { name: 'upgrade', target: controller.id }
+	for (struct of structures) {
+		if (struct.structureType == STRUCTURE_CONTROLLER)
+			return creep.memory.job = { name: 'upgrade', target: struct.id }
 	}
 }
 /**
@@ -92,3 +60,28 @@ function clearMemory() {
 		if (!Game.creeps[name])
 			delete Memory.creeps[name];
 }
+
+module.exports = {
+	run: function () {
+		for (let name in Memory.creeps) {
+			let creep = Game.creeps[name];
+			if (!creep) {
+				delete Memory.creeps[name];
+				break;
+			}
+			if (!creep.memory.job) {
+				assignJob(creep);
+				creep.say(creep.memory.job.name);
+			}
+			if (creep.hits > 0) {
+				let jobComplete = !jobs[creep.memory.job.name].run(creep) 
+				if (jobComplete) {
+					removeJob(creep);
+					assignJob(creep);
+					!jobs[creep.memory.job.name].run(creep)
+				}
+				
+			}
+		}
+	}
+};
