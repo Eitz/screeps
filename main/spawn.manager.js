@@ -10,8 +10,8 @@ const spawns = {
 		{ name: 'default', getSource: () => '57ef9d9486f108ae6e60df65', limit: 2 },
 		{ name: 'upgrade', getSource: () => '57ef9d9486f108ae6e60df66', limit: 2 },
 		{ name: 'upgrade', getSource: () => '57ef9d9486f108ae6e60df65', limit: 2 },
-		/*{ name: 'default', getSource: () => '57ef9dd486f108ae6e60e5c1', limit: 4, flag:'BellowRoom' },
-		{ name: 'default', getSource: () => '57ef9dd486f108ae6e60e5c2', limit: 4, flag:'BellowRoom' },*/
+		{ name: 'default', getSource: () => '57ef9d9586f108ae6e60df69', limit: 4, flag:'Safe Room' },
+/*		{ name: 'default', getSource: () => '57ef9dd486f108ae6e60e5c2', limit: 4, flag:'BellowRoom' },*/
 	],
 	'default': [
 		{
