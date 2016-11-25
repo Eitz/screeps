@@ -13,7 +13,9 @@ module.exports = {
 		if (creep.memory.working) {
 			let target = Game.getObjectById(creep.memory.job.target);
 			if (target) {
-				if (creep.build(target) == ERR_NOT_IN_RANGE) {
+				if (creep.room != target.room) {
+					creep.moveTo(target);
+				} else if (creep.build(target) == ERR_NOT_IN_RANGE) {
 					creep.moveTo(target);
 				}
 			} 

@@ -3,7 +3,7 @@
 const creepManager = require('./creep.manager');
 const spawnManager = require('./spawn.manager');
 const memoryManager = require('./memory.manager');
-// const speakManager = require('./speak.manager');
+const speakManager = require('./speak.manager');
 
 module.exports.loop = function () {
 	// spawn new creep when needed
@@ -13,7 +13,7 @@ module.exports.loop = function () {
 	// execute jobs
 	creepManager.run();
 	// random gibbirish
-	// speakManager.run();
+	speakManager.run();
 }
 
 

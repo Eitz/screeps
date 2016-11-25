@@ -6,10 +6,10 @@ bodyParts[WORK] = 100;
 
 const spawns = {
 	'Home': [
-		{ name: 'default', getSource: () => '57ef9d9486f108ae6e60df66', limit: 1 },
-		{ name: 'default', getSource: () => '57ef9d9486f108ae6e60df65', limit: 1 },
-		{ name: 'upgrade', getSource: () => '57ef9d9486f108ae6e60df66', limit: 4 },
-		{ name: 'upgrade', getSource: () => '57ef9d9486f108ae6e60df65', limit: 4 },
+		{ name: 'default', getSource: () => '57ef9d9486f108ae6e60df66', limit: 4 },
+		{ name: 'default', getSource: () => '57ef9d9486f108ae6e60df65', limit: 4 },
+		{ name: 'upgrade', getSource: () => '57ef9d9486f108ae6e60df66', limit: 3 },
+		{ name: 'upgrade', getSource: () => '57ef9d9486f108ae6e60df65', limit: 3 },
 		{ name: 'default', getSource: () => '57ef9d9586f108ae6e60df69', limit: 4, flag: 'Safe Room' },
 		{ name: 'default', getSource: () => '57ef9d9786f108ae6e60dfa9', limit: 4, flag: 'Side Room' },
 		{ name: 'default', getSource: () => '57ef9d9786f108ae6e60dfaa', limit: 4, flag: 'Side Room' },

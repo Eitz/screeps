@@ -46,7 +46,7 @@ function assignJob(creep) {
 	let structures = util.getStructures(creep.pos);
 	if (creep.memory.classe != 'upgrade' || util.creepsQuantity() < 5) {
 		for (struct of structures) {
-			if (struct.structureType === STRUCTURE_CONTAINER || struct.structureType === STRUCTURE_SPAWN || struct.structureType === STRUCTURE_EXTENSION) {
+			if (struct.structureType === STRUCTURE_TOWER || struct.structureType === STRUCTURE_CONTAINER || struct.structureType === STRUCTURE_SPAWN || struct.structureType === STRUCTURE_EXTENSION) {
 				if (struct.energy < struct.energyCapacity) {
 					if (creep.carry.energy > 0) {
 						creep.memory.working = true;
@@ -56,7 +56,7 @@ function assignJob(creep) {
 			}
 		}
 		for (struct of structures) {
-			if ((struct.my || struct.structureType === STRUCTURE_ROAD || struct.structureType == STRUCTURE_WALL && struct.hits < 0) && struct.hits < struct.hitsMax) {
+			if ((struct.my || struct.structureType === STRUCTURE_ROAD || struct.structureType == STRUCTURE_WALL && struct.hits < 10000) && struct.hits < struct.hitsMax) {
 				creep.memory.job = { name: 'repair', target: struct.id };
 				if (creep.carry.energy > 0) {
 					creep.memory.working = true;
@@ -67,13 +67,15 @@ function assignJob(creep) {
 		/** @type {ConstructionSite} */
 		let construct;
 		for(let constructionId in Game.constructionSites) {
+			if (creep.carry.energy > 0) {
+				creep.memory.working = true;
+			}
 			creep.memory.job = { name: 'build', target: constructionId };
 			return;
 		}
 	}
 	/** @type {StructureController} */
 	let controller;
-	console.log(structures.join(','));
 	for (controller of structures) {
 		if (controller.structureType == STRUCTURE_CONTROLLER && controller.my)
 			return creep.memory.job = { name: 'upgrade', target: controller.id }
