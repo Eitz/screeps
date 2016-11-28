@@ -12,6 +12,8 @@ module.exports = {
 		}
 		if (creep.memory.working) {
 			var target = Game.getObjectById(creep.memory.job.target);
+			if (!target)
+			    return false;
 			if (target.energy == target.energyCapacity)
 				return false;
 			let returnCode = creep.transfer(target, RESOURCE_ENERGY); 

@@ -2,7 +2,7 @@ const creepFunctions = require('./creep.functions')
 
 module.exports = {
 	/** @param {Creep} creep **/
-	run: function (creep) {
+	run: function(creep) {
 		if (creep.memory.working && creep.carry.energy == 0) {
 			creep.memory.working = false;
 			return false;
@@ -11,25 +11,19 @@ module.exports = {
 			creep.memory.working = true;
 		}
 		if (creep.memory.working) {
-			let target;
-			for (let roomName in Game.rooms) {
-				if (Game.rooms[roomName].controller && Game.rooms[roomName].controller.my) {
-					target = Game.rooms[roomName].controller;
-				}
-			}
-			if (target) {
-				if (creep.upgradeController(target) == ERR_NOT_IN_RANGE) {
-					creep.moveTo(target);
-				}
-			} else {
+			var target = Game.getObjectById(creep.memory.job.target);
+			if (target.energy == target.energyCapacity)
+				return false;
+			let returnCode = creep.transfer(target, RESOURCE_ENERGY); 
+			if (returnCode == ERR_NOT_IN_RANGE) {
+				creep.moveTo(target);
+			} else if (returnCode == ERR_FULL) {
 				return false;
 			}
-				
-				
 		}
 		else {
 			creepFunctions.harvestEnergy(creep, creep.memory.source);
 		}
 		return true;
-	}
+}
 };

@@ -11,21 +11,9 @@ module.exports = {
 			creep.memory.working = true;
 		}
 		if (creep.memory.working) {
-			let target;
-			for (let roomName in Game.rooms) {
-				if (Game.rooms[roomName].controller && Game.rooms[roomName].controller.my) {
-					target = Game.rooms[roomName].controller;
-				}
+			if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+				creep.moveTo(creep.room.controller);
 			}
-			if (target) {
-				if (creep.upgradeController(target) == ERR_NOT_IN_RANGE) {
-					creep.moveTo(target);
-				}
-			} else {
-				return false;
-			}
-				
-				
 		}
 		else {
 			creepFunctions.harvestEnergy(creep, creep.memory.source);

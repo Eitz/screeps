@@ -2,20 +2,17 @@ const util = require('./util')
 
 const bodyParts = [];
 bodyParts[CARRY] = bodyParts[MOVE] = 50;
-bodyParts[TOUGH] = 10;
-bodyParts[ATTACK] = 80;
 bodyParts[WORK] = 100;
 
 const spawns = {
 	'Home': [
-		// { name: 'fight', getSource: () => '', limit: 3, flag: 'Safe Room', stop: true },
-		{ name: 'default', getSource: () => '57ef9d9486f108ae6e60df66', limit: 2 },
-		{ name: 'default', getSource: () => '57ef9d9486f108ae6e60df65', limit: 2 },
-		{ name: 'upgrade', getSource: () => '57ef9d9486f108ae6e60df66', limit: 2 },
-		{ name: 'upgrade', getSource: () => '57ef9d9486f108ae6e60df65', limit: 2 },
+		{ name: 'default', getSource: () => '57ef9d9486f108ae6e60df66', limit: 4 },
+		{ name: 'default', getSource: () => '57ef9d9486f108ae6e60df65', limit: 4 },
+		{ name: 'upgrade', getSource: () => '57ef9d9486f108ae6e60df66', limit: 3 },
+		{ name: 'upgrade', getSource: () => '57ef9d9486f108ae6e60df65', limit: 3 },
 		{ name: 'default', getSource: () => '57ef9d9586f108ae6e60df69', limit: 4, flag: 'Safe Room' },
- 		// { name: 'default', getSource: () => '57ef9d9786f108ae6e60dfa9', limit: 4, flag: 'Side Room' },
-		// { name: 'default', getSource: () => '57ef9d9786f108ae6e60dfaa', limit: 4, flag: 'Side Room' },
+		{ name: 'default', getSource: () => '57ef9d9786f108ae6e60dfa9', limit: 4, flag: 'Side Room' },
+		{ name: 'default', getSource: () => '57ef9d9786f108ae6e60dfaa', limit: 4, flag: 'Side Room' },
 	],
 	'default': [
 		{
@@ -43,7 +40,7 @@ function tryToSpawnCreep() {
 	let creeps = util.creepsQuantity();
 	for (let spawn in Game.spawns) {
 		let classes = spawns[spawn];
-		if (!classes || creeps < 3)
+		if (!classes || creeps == 0)
 			classes = spawns['default'];
 		for (let classe of classes) {
 			let class_creeps = _.filter(Game.creeps, (creep) => { return creep.memory.classe == classe.name && creep.memory.source == classe.getSource(spawn) });
@@ -65,7 +62,7 @@ function spawnCreep(spawnName, classe) {
 	}
 	let body = classe.body || prepareBody(classe, energyCapacity);
 	if (body.cost <= energyTotal)
-		return spawn.createCreep(body.parts, undefined, { stop: classe.stop, flag: classe.flag, classe: classe.name, job: undefined, working: false, source: classe.getSource(spawnName) });
+		return spawn.createCreep(body.parts, undefined, { flag: classe.flag, classe: classe.name, job: undefined, working: false, source: classe.getSource(spawnName) });
 	else
 		return undefined;
 
@@ -86,13 +83,6 @@ function spawnCreep(spawnName, classe) {
 					addBodyPart(body, CARRY);
 					while (body.cost < energyCapacity) {
 						addBodyPart(body, WORK);
-					}
-					break;
-				case 'fight':
-					while (body.cost < energyCapacity) {
-						addBodyPart(body, MOVE);
-						addBodyPart(body, ATTACK);
-						addBodyPart(body, TOUGH);
 					}
 					break;
 				case 'upgrade':
@@ -117,7 +107,7 @@ function spawnCreep(spawnName, classe) {
 
 		function getDefaultBody(energyCapacity) {
 			let body = { parts: [], cost: 0 };
-			while (body.cost < energyCapacity/1.5) {
+			while (body.cost < energyCapacity) {
 				addBodyPart(body, MOVE);
 				addBodyPart(body, WORK);
 				addBodyPart(body, CARRY);

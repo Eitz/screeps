@@ -7,7 +7,6 @@ const jobs = {
 	"upgrade" : require('./creep.job.upgrade'),
 	"build" : require('./creep.job.build'),
 	"repair" : require('./creep.job.repair'),
-	"fight" : require('./creep.job.fight'),
 };
 
 module.exports = {
@@ -18,10 +17,6 @@ module.exports = {
 				delete Memory.creeps[name];
 				break;
 			}
-
-			if (creep.memory.classe == "fight")
-				return jobs['fight'].run(creep);
-
 			if (!creep.memory.job) {
 				assignJob(creep);
 				if (creep.memory.job) {
@@ -51,7 +46,7 @@ function assignJob(creep) {
 	let structures = util.getStructures(creep.pos);
 	if (creep.memory.classe != 'upgrade' || util.creepsQuantity() < 5) {
 		for (struct of structures) {
-			if (struct.structureType === STRUCTURE_CONTAINER || struct.structureType === STRUCTURE_SPAWN || struct.structureType === STRUCTURE_EXTENSION) {
+			if (struct.structureType === STRUCTURE_TOWER || struct.structureType === STRUCTURE_CONTAINER || struct.structureType === STRUCTURE_SPAWN || struct.structureType === STRUCTURE_EXTENSION) {
 				if (struct.energy < struct.energyCapacity) {
 					if (creep.carry.energy > 0) {
 						creep.memory.working = true;
@@ -60,34 +55,13 @@ function assignJob(creep) {
 				}
 			}
 		}
-		let towers = [];
 		for (struct of structures) {
-			if (struct.structureType === STRUCTURE_TOWER) {
-				if (struct.energy < struct.energyCapacity) {
-					if (creep.carry.energy > 0) {
-						creep.memory.working = true;
-					}
-					return creep.memory.job = { name: 'harvest', target: struct.id };
+			if ((struct.my || struct.structureType === STRUCTURE_ROAD || struct.structureType == STRUCTURE_WALL && struct.hits < 10000) && struct.hits < struct.hitsMax) {
+				creep.memory.job = { name: 'repair', target: struct.id };
+				if (creep.carry.energy > 0) {
+					creep.memory.working = true;
 				}
-				towers.push(struct);
-			}
-		}
-		for (struct of structures) {
-			let wall_max_hits = 20000;
-			if ((struct.my && (struct.structureType != STRUCTURE_RAMPART || struct.hits < wall_max_hits) || struct.structureType === STRUCTURE_ROAD || struct.structureType == STRUCTURE_WALL && struct.hits < wall_max_hits) && struct.hits < struct.hitsMax) {
-				let repair = true;
-				for (let tower of towers) {
-					if (tower.room == struct.room) {
-						repair = false;
-					}
-				}
-				if (repair) {
-					creep.memory.job = { name: 'repair', target: struct.id };
-					if (creep.carry.energy > 0) {
-						creep.memory.working = true;
-					}
-					return;
-				}
+				return;
 			}
 		}
 		/** @type {ConstructionSite} */
