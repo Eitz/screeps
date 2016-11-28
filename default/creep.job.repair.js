@@ -12,6 +12,8 @@ module.exports = {
 		}	
 		if (creep.memory.working) {
 			let target = Game.getObjectById(creep.memory.job.target);
+			if (!target)
+			    return false;
 			if (target.hits < target.hitsMax) {
 				if (creep.room != target.room) {
 					creep.moveTo(target);

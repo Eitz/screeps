@@ -4,6 +4,7 @@ const creepManager = require('./creep.manager');
 const spawnManager = require('./spawn.manager');
 const memoryManager = require('./memory.manager');
 const speakManager = require('./speak.manager');
+const towerManager = require('./tower.manager');
 
 module.exports.loop = function () {
 	// spawn new creep when needed
@@ -14,6 +15,8 @@ module.exports.loop = function () {
 	creepManager.run();
 	// random gibbirish
 	speakManager.run();
+	// random gibbirish
+	towerManager.run();
 }
 
 

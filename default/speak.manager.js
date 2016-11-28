@@ -3,12 +3,17 @@
 module.exports.run = function () {
 	for (let name in Game.creeps) {
 		if (Math.random() > 0.9) {
-			Game.creeps[name].say(getRandomQuote())
+			Game.creeps[name].say(getRandomQuote(Memory.creeps[name].classe))
 		}
 	}
 }
 
-function getRandomQuote() {
+function getRandomQuote(classe) {
+
+	if (classe == "fight") {
+		return "WAAAAAAAR!";
+	}
+
 	let quotes = [
 		'For Seldon',
 		'No fight!',
